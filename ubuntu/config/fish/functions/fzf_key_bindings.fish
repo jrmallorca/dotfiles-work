@@ -1,0 +1,1 @@
+/home/jrmallorca/.fzf/shell/key-bindings.fish

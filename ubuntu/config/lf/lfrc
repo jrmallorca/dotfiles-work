@@ -1,0 +1,588 @@
+############
+# Settings #
+############
+
+# Image previewer
+set previewer stpv
+set cleaner stpvimgclr
+&stpvimg --listen $id
+
+set shell fish                     # Set which shell commands to use
+set relativenumber true            # Show number of line relative to current line
+set number true                    # Show number on current line
+set icons                          # Show icons before list items
+set hidden true                    # Show hidden files
+set ignorecase true                # Ignore case when searching
+set smartcase true                 # Override 'ignorecase' when search include uppercase
+set promptfmt "\033[38;5;250m%d%f" # Format of prompt show in top line
+
+#############
+# Functions #
+#############
+
+# Toggle settings
+
+# View lf in single pane mode
+cmd single_pane &lf -remote "send $id set ratios 1"
+
+# View lf in triple pane mode
+cmd triple_pane &lf -remote "send $id set ratios 1:2:3"
+
+# Navigation
+
+# Fuzzy find a file/directory and select/enter it
+cmd fuzzy_find ${{
+    set -l current_dir (pwd)                    # Get current directory path
+    set -l fzf_header (basename "$current_dir") # Get current directory name to be the header
+    set -l has_fd (command -v fd)               # Check if fd command has been installed
+    set -l find_cmd                             # Declare find_cmd
+    set -l flags                                # Declare flags
+
+    # Check if we should use find or fd
+    if [ -n "$has_fd" ]
+        set find_cmd fd
+    else
+        set find_cmd find
+    end
+
+    # Check if we should recursively find files and directories
+    if count $argv > /dev/null
+        and [ "$argv[1]" = "--non-recursive" ]
+        if [ -n "$has_fd" ]
+            set -a flags --hidden --max-depth 1
+        else
+            set -a flags -maxdepth 1
+        end
+    end
+
+    # Find files/directories from current directory pipe remaining output to fzf
+    set -l preview bat {-1} --number --color=always # Set the preview command of fzf
+    set -l res ($find_cmd . $flags | fzf --ansi --header=$fzf_header --preview="$preview")
+
+    # If result is a directory, enter it.
+    # Add it in the zoxide database as well
+    # Else, go to the file's directory and highlight it
+    if count $res > /dev/null
+        and [ -d $res ]
+        lf -remote "send $id cd \"$res\""
+        zoxide add $res
+    else 
+        lf -remote "send $id select \"$res\""
+    end
+
+}}
+
+# Change directory and add to zoxide
+cmd z &{{
+    zoxide add "$argv[1]"                 # Add to zoxide database
+    lf -remote "send $id cd \"$argv[1]\"" # Change to selected directory
+}}
+
+# Go to the root of the git repository
+cmd git_root %{{
+    set -l root_dir (git rev-parse --show-toplevel) # Get root directory
+
+    # Check if we're in a git repository and go to root directory if so
+    # Add it in the zoxide database as well
+    if [ -d "$root_dir" ]
+        lf -remote "send $id cd \"$root_dir\""
+        zoxide add $root_dir
+    else
+        echo "fatal: not a git repository (or any of the parent directories): .git"
+    end
+}}
+
+# Copy the path of selected file
+cmd copy_path %{{
+    set -l file_path (readlink -f "$f")
+    echo -n "$file_path" 2>/dev/null | xclip -selection clipboard >/dev/null 2>&1
+    notify-send "Copied to Clipboard" "$file_path"
+}}
+
+# Open
+
+# Run if selected file is executable
+cmd run ${{
+    [ -x "$f" ] && "$f"
+}}
+
+cmd new-instance %{{
+    set -l current_dir (pwd)
+    setsid -f ~/dotfiles/arch/scripts/open-lf "$current_dir" >/dev/null 2>&1
+}}
+
+cmd open ${{
+    set -l mime_type (file --mime-type "$f" -bL)
+    switch $mime_type
+        case "text/*" "application/json" "inode/*" "application/octet-stream"
+            "$EDITOR" "$f"
+        case "*"
+            devour xdg-open "$f"
+    end
+}}
+
+cmd open-new-window %{{
+    set -l num_files (echo "$fx" | wc -l)
+    set -l i 1
+    while [ $i -le $num_files ]
+        set -l file (echo "$fx" | sed -n "$i p")
+
+        set -l mime_type (file --mime-type "$f" -bL)
+        switch $mime_type
+            case "text/*" "application/json" "inode/*" "application/octet-stream"
+                setsid alacritty -e sh -c "sleep 0.5 && "$EDITOR" "$file"" >/dev/null 2>&1 &
+            case "*"
+                setsid xdg-open "$f" >/dev/null 2>&1 &
+        end
+
+        set i (math "$i + 1")
+    end
+}}
+
+cmd gui %{{
+    set -l current_dir (pwd)
+    devour pcmanfm "$current_dir" >/dev/null 2>&1
+}}
+
+cmd open-with %{{
+    echo -n "Open with: "
+    read program
+    if [ -n "$(command -v "$program")" ]; then
+        devour "$program" "$fx" >/dev/null 2>&1
+    else
+        echo "$program not found"
+    fi
+}}
+
+# New file/directory
+
+# Create new directory
+cmd mkdir %{{
+    echo -n "Directory Name: " # Indicate creation of new directory
+    read input                 # Get user input of directory name
+    mkdir "$input"             # Use input to create new directory
+}}
+
+# Create empty file
+cmd mkfile %{{
+    echo -n "Filename: "     # Indicate creation of new file
+    read input               # Get user input of file name
+    touch "$input"           # Use input to create new file
+    lf -remote 'send reload' # Reload lf
+}}
+
+# Create executable script
+cmd mkscript %{{
+    echo -n "Script name: "     # Indicate creation of new script
+    read input                  # Get user input of script name
+    echo '#!/bin/sh' > "$input" # Echo shell to use in script
+    chmod +x "$input"           # Make script executable
+    lf -remote 'send reload'    # Reload lf
+}}
+
+# File Permissions
+
+# Make the file executable
+cmd make_executable %{{
+    set -l num_files (echo "$fx" | wc -l) # Count amount of selected files
+    set -l i 1                            # Set index to 1
+
+    while [ $i -le $num_files ]                  # While file is a symbolic link and exists
+        set -l file (echo "$fx" | sed -n "$i p") # Get the i-th file in selected files
+        chmod +x "$file"                         # Make file executable
+        set i (math "$i + 1")                    # Increment index
+    end
+
+    lf -remote 'send reload' # Reload lf
+}}
+
+# Trash
+
+# Trash the selected files
+cmd trash %{{
+    set -l num_files (echo "$fx" | wc -l) # Count amount of selected files
+    set -l i 1                            # Set index to 1
+
+    while [ $i -le $num_files ]                  # While file is a symbolic link and exists
+        set -l file (echo "$fx" | sed -n "$i p") # Get the i-th file in selected files
+        trash-put "$file"                        # Trash the file
+        set i (math "$i + 1")                    # Increment iindex
+    end
+}}
+
+# List the files in trash
+cmd tl !trash-list
+
+# Restore files in the trash
+cmd tres $trash-restore
+
+cmd trm ${{
+    trash-list
+    echo -n "trash-rm "
+    read input
+    trash-rm "$input"
+}}
+
+cmd clt %trash-empty
+
+# Git
+
+# Git add provided arguments
+cmd ga ${{
+    set -l is_git (git rev-parse --git-dir 2>/dev/null) # Check if current directory is within a git directory
+
+    # If it is a git directory, fzf modified and untracked files and git add those selected
+    if [ -n "$is_git" ]
+        set -l preview "git diff --color=always -- {-1} | diff-so-fancy"    # Set the preview command of fzf 
+        git ls-files --modified --others --exclude-standard --deduplicate | # Look for modified and untracked files
+            fzf --ansi --multi --print0 --preview="$preview" |              # FZF with multi select on results
+            xargs --null --open-tty git add                                 # Git add selected items
+    else
+        echo "fatal: not a git repository (or any of the parent directories): .git"
+    end
+}}
+
+# Git add all in current directory
+cmd ga. ${{
+    set -l is_git (git rev-parse --git-dir 2>/dev/null) # Check if current directory is within a git directory
+
+    # If it is a git directory, git add everything in current directory
+    if [ -n "$is_git" ]
+        git add .
+    else
+        echo "fatal: not a git repository (or any of the parent directories): .git"
+    end
+}}
+
+# Git add all
+cmd gaa ${{
+    set -l is_git (git rev-parse --git-dir 2>/dev/null) # Check if current directory is within a git directory
+
+    # If it is a git directory, git add everything in git directory
+    if [ -n "$is_git" ]
+        git add -A
+    else
+        echo "fatal: not a git repository (or any of the parent directories): .git"
+    end
+}}
+
+# Git commit
+cmd gc ${{
+    set -l is_git (git rev-parse --git-dir 2>/dev/null) # Check if current directory is within a git directory
+
+    # If it is a git directory, input the commit message and commit
+    if [ -n "$is_git" ]
+        git commit -S -m "$argv"
+    else
+        echo "fatal: not a git repository (or any of the parent directories): .git"
+    end
+}}
+
+# Git checkout
+cmd gco ${{
+    set -l is_git (git rev-parse --git-dir 2>/dev/null) # Check if current directory is within a git directory
+
+    # If it is a git directory, git checkout the selected branch
+    if [ -n "$is_git" ]
+        git branch | fzf --ansi | xargs git checkout
+    else
+        echo "fatal: not a git repository (or any of the parent directories): .git"
+    end
+}}
+
+# Create a new git branch and git checkout
+cmd gcob &{{
+    set -l is_git (git rev-parse --git-dir 2>/dev/null) # Check if current directory is within a git directory
+
+    # If it is a git directory, create a new git branch and git checkout
+    if [ -n "$is_git" ]
+        git checkout -b $argv
+    else
+        echo "fatal: not a git repository (or any of the parent directories): .git"
+    end
+}}
+
+# Git diff
+cmd gd ${{
+    set -l is_git (git rev-parse --git-dir 2>/dev/null) # Check if current directory is within a git directory
+
+    # If it is a git directory, git diff selected files
+    if [ -n "$is_git" ]
+        cd (git rev-parse --show-toplevel)                                     # Go to git root directory
+        set -l preview "git diff $argv --color=always -- {-1} | diff-so-fancy" # Set the preview command of fzf 
+        git diff $argv --name-only |                                           # Get git diffs
+            fzf --multi --ansi --preview="$preview"                            # Pipe diffs into fzf
+    else
+        echo "fatal: not a git repository (or any of the parent directories): .git"
+    end
+}}
+
+# Git diff --cached
+cmd gdc ${{
+    set -l is_git (git rev-parse --git-dir 2>/dev/null) # Check if current directory is within a git directory
+
+    # If it is a git directory, git diff selected files
+    if [ -n "$is_git" ]
+        cd (git rev-parse --show-toplevel)                                              # Go to git root directory
+        set -l preview "git diff $argv --cached --color=always -- {-1} | diff-so-fancy" # Set the preview command of fzf 
+        git diff $argv --cached --name-only |                                           # Get git diffs
+            fzf --multi --ansi --preview="$preview"                                     # Pipe diffs into fzf
+    else
+        echo "fatal: not a git repository (or any of the parent directories): .git"
+    end
+}}
+
+# Git push
+cmd gp ${{
+    set -l is_git (git rev-parse --git-dir 2>/dev/null) # Check if current directory is within a git directory
+
+    # If it is a git directory, git push
+    if [ -n "$is_git" ]
+        git push
+    else
+        echo "fatal: not a git repository (or any of the parent directories): .git"
+    end
+}}
+
+# Git pull
+cmd gpl ${{
+    set -l is_git (git rev-parse --git-dir 2>/dev/null) # Check if current directory is within a git directory
+
+    # If it is a git directory, git pull
+    if [ -n "$is_git" ]
+        git pull
+    else
+        echo "fatal: not a git repository (or any of the parent directories): .git"
+    end
+}}
+
+# Git status
+cmd gs !{{
+    set -l is_git (git rev-parse --git-dir 2>/dev/null) # Check if current directory is within a git directory
+
+    # If it is a git directory, git status
+    if [ -n "$is_git" ]
+        git status
+    else
+        echo "fatal: not a git repository (or any of the parent directories): .git"
+    end
+}}
+
+# Show commit history
+cmd gg ${{
+    set -l is_git (git rev-parse --git-dir 2>/dev/null) # Check if current directory is within a git directory
+
+    # If it is a git directory, show commit history
+    if [ -n "$is_git" ]
+        git log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s"
+    else
+        echo "fatal: not a git repository (or any of the parent directories): .git"
+    end
+}}
+
+
+# Archives
+
+# Extract compressed files based on the file ending
+cmd extract %{{
+    set -l num_files (echo "$fx" | wc -l) # Count amount of selected files
+    set -l i 1                            # Set index to 1
+
+    while [ $i -le $num_files ]                  # While file is a symbolic link and exists
+        set -l file (echo "$fx" | sed -n "$i p") # Get the i-th file in selected files
+
+        # Unzip compressed file based on file ending
+        switch "$file"
+            case "*.tar.bz2"
+                tar xjf "$file"
+            case "*.tar.gz"
+                tar xzf "$file"
+            case "*.bz2"
+                bunzip2 "$file"
+            case "*.rar"
+                unrar x "$file"
+            case "*.gz"
+                gunzip "$file"
+            case "*.tar"
+                tar xf "$file"
+            case "*.tbz2"
+                tar xjf "$file"
+            case "*.tgz"
+                tar xzf "$file"
+            case "*.zip"
+                unzip "$file"
+            case "*.Z"
+                uncompress "$file"
+            case "*.7z"
+                7z x "$file"
+            case "*.deb"
+                ar x "$file"
+            case "*.tar.xz"
+                tar xf "$file"
+            case "*.tar.zst"
+                unzstd "$file"      
+            case "*"
+                echo "$file: Extraction Failed"
+        end
+
+        set i (math "$i + 1") # Increment index
+    end
+}}
+
+# Editing
+
+# Search for file, go to its git root directory if possible and edit
+cmd search_edit ${{
+    set -l has_fd (command -v fd) # Check if fd command has been installed
+    set -l find_cmd               # Declare find command
+
+    # If fd command exists, execute
+    # Else use find
+    if [ -n "$has_fd" ]
+        set find_cmd fd . --hidden --no-ignore --type file
+    else
+        set find_cmd find . -type f
+    end
+
+    set -l preview bat {-1} --number --color=always          # Set the preview command of fzf
+    set -l res ($find_cmd | fzf --ansi --preview="$preview") # Find files and directories in descendant
+                                                             # directories to pipe into fzf
+
+    # Check if the result is non-empty
+    if count $res > /dev/null
+        set -l res_dir (dirname "$res") # Get result's path to its directory
+
+        cd "$res_dir"                                                        # Change to result's directory
+        set -l res_path (realpath --canonicalize-existing (basename "$res")) # Get result's absolute path
+        set -l root_dir (git rev-parse --quiet --show-toplevel)              # Get git root directory
+
+        # Check if we're in a git repository and go to root directory if so
+        # Add it in the zoxide database as well
+        if [ -d "$root_dir" ]
+            lf -remote "send $id cd \"$root_dir\""
+            zoxide add "$root_dir"
+            cd "$root_dir" && "$EDITOR" "$res_path"
+        else
+            "$EDITOR" "$res_path"
+        end
+    end
+}}
+
+# Search for file, go to its git root directory if possible and sudoedit
+cmd search_sudoedit ${{
+    set -l has_fd (command -v fd) # Check if fd command has been installed
+    set -l find_cmd               # Declare find command
+
+    # If fd command exists, execute
+    # Else use find
+    if [ -n "$has_fd" ]
+        set find_cmd fd . --hidden --no-ignore --type file
+    else
+        set find_cmd find . -type f
+    end
+
+    set -l res ($find_cmd | fzf --ansi) # Find files and directories in descendant
+                                 # directories to pipe into fzf
+
+    # Check if the result is non-empty
+    if count $res > /dev/null
+        set -l res_dir (dirname "$res") # Get result's path to its directory
+
+        cd "$res_dir"                                                        # Change to result's directory
+        set -l res_path (realpath --canonicalize-existing (basename "$res")) # Get result's absolute path
+        set -l root_dir (git rev-parse --quiet --show-toplevel)              # Get root directory
+
+        # Check if we're in a git repository and go to root directory if so
+        # Add it in the zoxide database as well
+        if [ -d "$root_dir" ]
+            lf -remote "send $id cd \"$root_dir\""
+            zoxide add "$root_dir"
+            cd "$root_dir" && sudoedit "$res_path"
+        else
+            sudoedit "$res_path"
+        end
+    end
+}}
+
+###############
+# Keybindings #
+###############
+
+# Disable Defaults
+
+map m   # Disable mark-save
+map "'" # Disable mark-load
+map '"' # Disable mark-remove
+map d   # Disable cut
+map c   # Disable clear
+map f   # Disable find
+
+# Commands
+
+map mc &{{ cd ~/dotfiles/arch && make configuration }}
+map p paste
+map y copy
+map x cut
+map chx chmodx
+#map g gui
+map Y copy_path
+
+# Delete
+
+map dd trash
+map dD delete
+
+# Toggle [ z ]
+
+map . set hidden!
+map z
+
+# UI
+map zz single_pane
+map zz triple_pane
+
+# Action [ a ]
+
+map ar run
+map ax extract
+
+# New [ n ]
+
+map n
+map nd mkdir
+map nf mkfile
+map ns mkscript
+map nn new_notes 
+
+# Open [ o ]
+
+map o
+map on open-new-window
+map oo open-with
+map O new-instance
+
+# Find files and directories
+
+map F fuzzy_find --non-recursive
+map f fuzzy_find
+
+map E search_sudoedit
+map e search_edit
+
+# Common directories
+
+# Navigate
+map zr z /
+map zh z ~/
+map zn z ~/neorg
+map zp z ~/Projects
+map z. z ~/dotfiles/arch
+map zc z ~/.config
+map zdw z ~/Downloads
+map zE z /etc
+map zU z /usr
+map zmd z /mnt/d
+map zmdn z ~/mnt/d/Notes
+map zmdu z ~/mnt/d/University
+map zmp z /mnt/phone
+map zg git_root
