@@ -20,13 +20,13 @@ configuration:
 necessary:
 	sudo apt-add-repository ppa:fish-shell/release-3
 	sudo add-apt-repository ppa:neovim-ppa/unstable
+	sudo add-apt-repository ppa:git-core/ppa
 	sudo apt update -y && sudo apt upgrade -y
-	sudo apt install -y git neovim fish zathura curl wget fzf fd-find bat ripgrep \
+	sudo apt install -y git neovim fish zathura curl wget fzf fd-find \
 		cargo xdg-user-dirs
+	sudo apt install -o Dpkg::Options::="--force-overwrite" bat ripgrep
+	cargo install zoxide --locked
 	chsh -s /usr/bin/fish
-
-zoxide:
-	curl -sS https://webinstall.dev/zoxide | bash
 
 lf:
 	wget https://github.com/gokcehan/lf/releases/download/r26/lf-linux-amd64.tar.gz \
