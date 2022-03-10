@@ -21,12 +21,21 @@ necessary:
 	sudo apt-add-repository ppa:fish-shell/release-3
 	sudo add-apt-repository ppa:neovim-ppa/unstable
 	sudo add-apt-repository ppa:git-core/ppa
+	sudo add-apt-repository ppa:aos1/diff-so-fancy
 	sudo apt update -y && sudo apt upgrade -y
 	sudo apt install -y git neovim fish zathura curl wget fzf fd-find \
-		cargo xdg-user-dirs
+		cargo xdg-user-dirs \
+		diff-so-fancy
 	sudo apt install -o Dpkg::Options::="--force-overwrite" bat ripgrep
 	cargo install zoxide --locked
 	chsh -s /usr/bin/fish
+
+diff-so-fancy:
+	sudo add-apt-repository ppa:aos1/diff-so-fancy
+	sudo apt update -y
+	sudo apt install -y diff-so-fancy
+	git config --global core.pager "diff-so-fancy | less --tabs=4 -RFX"
+	git config --global interactive.diffFilter "diff-so-fancy --patch"
 
 lf:
 	wget https://github.com/gokcehan/lf/releases/download/r26/lf-linux-amd64.tar.gz \
