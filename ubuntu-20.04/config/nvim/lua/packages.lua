@@ -26,7 +26,10 @@ require('packer').startup(function()
       'nvim-lua/plenary.nvim'
     }
   }
-  use 'camspiers/snap'             -- Fuzzy finder
+  use {                            -- Fuzzy finder
+    'nvim-telescope/telescope.nvim',
+    requires = { {'nvim-lua/plenary.nvim'} }
+  }
   -- Highlight, edit, and navigate code using a fast incremental parsing library
   use {
       'nvim-treesitter/nvim-treesitter',
