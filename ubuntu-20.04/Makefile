@@ -28,6 +28,7 @@ necessary:
 		diff-so-fancy
 	sudo apt install -o Dpkg::Options::="--force-overwrite" bat ripgrep
 	cargo install zoxide --locked
+	cargo install alacritty
 	chsh -s /usr/bin/fish
 
 packer:
