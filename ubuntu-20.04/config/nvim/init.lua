@@ -3,6 +3,7 @@ require('keybindings') -- Keybindings
 require('colors')      -- Color settings
 
 require('packages')          -- Installed packages
+require('pkg-telescope')     -- Fuzzy finder
 require('pkg-gitsigns')      -- Gitsigns package
 require('pkg-true-zen')      -- TrueZen package
 require('pkg-flutter-tools') -- Flutter tools package
