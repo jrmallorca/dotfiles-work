@@ -25,6 +25,7 @@ necessary:
 	sudo apt update -y && sudo apt upgrade -y
 	sudo apt install -y git neovim fish zathura curl wget fzf fd-find \
 		cargo xdg-user-dirs \
+		cmake pkg-config libfreetype6-dev libfontconfig1-dev libxcb-xfixes0-dev libxkbcommon-dev python3 \
 		diff-so-fancy
 	sudo apt install -o Dpkg::Options::="--force-overwrite" bat ripgrep
 	cargo install zoxide --locked
