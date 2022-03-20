@@ -1,3 +1,5 @@
+-- If it's a `<Plug>`, then DO NOT do `noremap = true`
+
 local map = vim.api.nvim_set_keymap
 local opts = { noremap = true, silent = true }
 
@@ -33,15 +35,15 @@ map('n', '<Bslash>/', [[<Cmd>Telescope live_grep<CR>]], opts)
 
 -- Lightspeed
 -- Replace 's' with 'f'
-map('n', 'f', [[<Plug>Lightspeed_s]], opts)
-map('n', 'F', [[<Plug>Lightspeed_S]], opts)
+map('n', 'f', [[<Plug>Lightspeed_s]], { silent = true })
+map('n', 'F', [[<Plug>Lightspeed_S]], { silent = true })
 
 -- Ultest
 -- ]t         = Find next failed test, direction up
 -- [t         = Find next failed test, direction down
 -- <Leader>tt = Test everything
 -- <Leader>tn = Test nearest to cursor
-map('n', ']t', [[<Plug>(ultest-next-fail)]], opts)
-map('n', '[t', [[<Plug>(ultest-prev-fail)]], opts)
-map('n', '<Leader>tt', [[<Plug>(ultest-run-file)]], opts)
-map('n', '<Leader>tn', [[<Plug>(ultest-run-nearest)]], opts)
+map('n', ']t', [[<Plug>(ultest-next-fail)]], { silent = true })
+map('n', '[t', [[<Plug>(ultest-prev-fail)]], { silent = true })
+map('n', '<Leader>tt', [[<Plug>(ultest-run-file)]], { silent = true })
+map('n', '<Leader>tn', [[<Plug>(ultest-run-nearest)]], { silent = true })
