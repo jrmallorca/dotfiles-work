@@ -24,18 +24,13 @@ necessary:
 	sudo add-apt-repository ppa:aos1/diff-so-fancy
 	sudo apt update -y && sudo apt upgrade -y
 	sudo apt install -y git neovim fish zathura curl wget fzf fd-find \
-		cargo xdg-user-dirs \
+		xdg-user-dirs \
 		cmake pkg-config libfreetype6-dev libfontconfig1-dev libxcb-xfixes0-dev libxkbcommon-dev python3 \
 		diff-so-fancy
 	sudo apt install -o Dpkg::Options::="--force-overwrite" bat ripgrep
+	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh # Install rustup and cargo
 	cargo install zoxide --locked
-	cargo install alacritty
 	chsh -s /usr/bin/fish
-
-packer:
-	git clone --depth 1 https://github.com/wbthomason/packer.nvim \
-		~/.local/share/nvim/site/pack/packer/start/packer.nvim
-
 
 diff-so-fancy:
 	sudo add-apt-repository ppa:aos1/diff-so-fancy
