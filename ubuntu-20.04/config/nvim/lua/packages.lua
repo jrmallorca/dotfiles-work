@@ -36,12 +36,6 @@ require('packer').startup(function()
       run = ':TSUpdate'
   }
   use 'neovim/nvim-lspconfig'      -- Configurations for built-in LSP client
-  -- Flutter tools
-  use {'akinsho/flutter-tools.nvim', requires = 'nvim-lua/plenary.nvim'}
-  use {
-    'dart-lang/dart-vim-plugin',
-    config = 'vim.cmd([[let g:dart_format_on_save = 1]])'
-  }
   use 'hrsh7th/nvim-compe'         -- Autocompletion plugin
   use 'L3MON4D3/LuaSnip'           -- Snippets plugin
   use 'windwp/nvim-autopairs'      -- Autopairs plugin
