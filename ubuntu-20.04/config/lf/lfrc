@@ -519,7 +519,7 @@ map f   # Disable find
 
 # Commands
 
-map mc &{{ cd ~/dotfiles/arch && make configuration }}
+map mc &{{ cd $USERPROFILE/dotfiles-work/ubuntu-20.04/ && make configuration }}
 map p paste
 map y copy
 map x cut
