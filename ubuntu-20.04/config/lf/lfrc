@@ -34,13 +34,13 @@ cmd triple_pane &lf -remote "send $id set ratios 1:2:3"
 cmd fuzzy_find ${{
     set -l current_dir (pwd)                    # Get current directory path
     set -l fzf_header (basename "$current_dir") # Get current directory name to be the header
-    set -l has_fd (command -v fd)               # Check if fd command has been installed
+    set -l has_fdfind (command -v fdfind)       # Check if fdfind command has been installed
     set -l find_cmd                             # Declare find_cmd
     set -l flags                                # Declare flags
 
-    # Check if we should use find or fd
-    if [ -n "$has_fd" ]
-        set find_cmd fd
+    # Check if we should use find or fdfind
+    if [ -n "$has_fdfind" ]
+        set find_cmd fdfind
     else
         set find_cmd find
     end
@@ -48,7 +48,7 @@ cmd fuzzy_find ${{
     # Check if we should recursively find files and directories
     if count $argv > /dev/null
         and [ "$argv[1]" = "--non-recursive" ]
-        if [ -n "$has_fd" ]
+        if [ -n "$has_fdfind" ]
             set -a flags --hidden --max-depth 1
         else
             set -a flags -maxdepth 1
@@ -56,7 +56,7 @@ cmd fuzzy_find ${{
     end
 
     # Find files/directories from current directory pipe remaining output to fzf
-    set -l preview bat {-1} --number --color=always # Set the preview command of fzf
+    set -l preview batcat {-1} --number --color=always # Set the preview command of fzf
     set -l res ($find_cmd . $flags | fzf --ansi --header=$fzf_header --preview="$preview")
 
     # If result is a directory, enter it.
@@ -433,18 +433,18 @@ cmd extract %{{
 
 # Search for file, go to its git root directory if possible and edit
 cmd search_edit ${{
-    set -l has_fd (command -v fd) # Check if fd command has been installed
-    set -l find_cmd               # Declare find command
+    set -l has_fdfind (command -v fdfind) # Check if fdfind command has been installed
+    set -l find_cmd                       # Declare find command
 
-    # If fd command exists, execute
+    # If fdfind command exists, execute
     # Else use find
-    if [ -n "$has_fd" ]
-        set find_cmd fd . --hidden --no-ignore --type file
+    if [ -n "$has_fdfind" ]
+        set find_cmd fdfind . --hidden --no-ignore --type file
     else
         set find_cmd find . -type f
     end
 
-    set -l preview bat {-1} --number --color=always          # Set the preview command of fzf
+    set -l preview batcat {-1} --number --color=always       # Set the preview command of fzf
     set -l res ($find_cmd | fzf --ansi --preview="$preview") # Find files and directories in descendant
                                                              # directories to pipe into fzf
 
@@ -470,19 +470,19 @@ cmd search_edit ${{
 
 # Search for file, go to its git root directory if possible and sudoedit
 cmd search_sudoedit ${{
-    set -l has_fd (command -v fd) # Check if fd command has been installed
-    set -l find_cmd               # Declare find command
+    set -l has_fdfind (command -v fdfind) # Check if fdfind command has been installed
+    set -l find_cmd                       # Declare find command
 
-    # If fd command exists, execute
+    # If fdfind command exists, execute
     # Else use find
-    if [ -n "$has_fd" ]
-        set find_cmd fd . --hidden --no-ignore --type file
+    if [ -n "$has_fdfind" ]
+        set find_cmd fdfind . --hidden --no-ignore --type file
     else
         set find_cmd find . -type f
     end
 
     set -l res ($find_cmd | fzf --ansi) # Find files and directories in descendant
-                                 # directories to pipe into fzf
+                                        # directories to pipe into fzf
 
     # Check if the result is non-empty
     if count $res > /dev/null
