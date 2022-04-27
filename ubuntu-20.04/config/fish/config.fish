@@ -76,8 +76,8 @@ abbr xx 'chmod +x'
 abbr xr 'xrandr --output "eDP1" --auto --output "HDMI-1-0" --auto --above "eDP1"'
 
 # paru
-abbr p 'paru -Syu'
-abbr prm 'paru -Rs'
+abbr p 'sudo apt update && sudo apt upgrade'
+abbr prm 'sudo apt remove'
 
 # (Un)mounting
 abbr mntd 'sudo mount /dev/sda1 /mnt/d'
@@ -109,6 +109,7 @@ abbr eg 'z (git rev-parse --show-toplevel) && zf -command search_edit'
 # Navigate
 abbr zr 'z / && zf'
 abbr zh 'z ~/ && zf'
+abbr zH 'z $USERPROFILE/ && zf'
 abbr zn 'z ~/neorg && zf'
 abbr zp 'z ~/Projects && zf'
 abbr z. 'z $USERPROFILE/dotfiles-work/ubuntu-20.04/ && zf'
