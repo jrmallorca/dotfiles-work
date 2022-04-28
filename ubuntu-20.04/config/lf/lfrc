@@ -576,13 +576,10 @@ map zr z /
 map zh z ~/
 map zn z ~/neorg
 map zp z ~/Projects
-map z. z ~/dotfiles/arch
+map z. z $USERPROFILE/dotfiles-work/ubuntu-20.04
 map zc z ~/.config
 map zdw z ~/Downloads
 map zE z /etc
 map zU z /usr
-map zmd z /mnt/d
-map zmdn z ~/mnt/d/Notes
-map zmdu z ~/mnt/d/University
-map zmp z /mnt/phone
+map zmc z /mnt/c
 map zg git_root

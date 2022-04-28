@@ -117,10 +117,7 @@ abbr zc 'z ~/.config && zf'
 abbr zdw 'z ~/Downloads && zf'
 abbr zE 'z /etc && zf'
 abbr zU 'z /usr && zf'
-abbr zmd 'z /mnt/d && zf'
-abbr zmdn 'z ~/mnt/d/Notes && zf'
-abbr zmdu 'z ~/mnt/d/University && zf'
-abbr zmp 'z /mnt/phone && zf'
+abbr zmc 'z /mnt/c && zf'
 abbr zg 'z (git rev-parse --show-toplevel) && zf'
 
 # TMUX
