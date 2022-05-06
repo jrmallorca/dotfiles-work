@@ -575,7 +575,8 @@ map e search_edit
 map zr z /
 map zh z ~/
 map zn z ~/neorg
-map zp z ~/Projects
+map zp z ~/company-projects
+map zP z $USERPROFILE/company-projects
 map z. z $USERPROFILE/dotfiles-work/ubuntu-20.04
 map zc z ~/.config
 map zdw z ~/Downloads
