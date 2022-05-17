@@ -6,7 +6,6 @@ require('packages')          -- Installed packages
 require('pkg-telescope')     -- Fuzzy finder
 require('pkg-gitsigns')      -- Gitsigns package
 require('pkg-true-zen')      -- TrueZen package
-require('pkg-flutter-tools') -- Flutter tools package
 require('pkg-lsp-config')    -- LSP package
 require('pkg-nvim-compe')    -- Auto-completion package
 -- require('pkg-lightspeed')    -- 2 character search package

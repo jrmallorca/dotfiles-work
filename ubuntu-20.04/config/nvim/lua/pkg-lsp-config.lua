@@ -29,7 +29,7 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 -- Enable the following language servers
-local servers = { "denols", "gopls", "jdtls" }
+local servers = { "denols" }
 for _, lsp in ipairs(servers) do
   if (lsp == "denols")
   then
@@ -40,14 +40,14 @@ for _, lsp in ipairs(servers) do
         lint = true
       }
     }
-  elseif (lsp == "jdtls")
-  then
-    local java_cmd = 'jdtls'
-    nvim_lsp[lsp].setup {
-      on_attach = on_attach,
-      capabilities = capabilities,
-      cmd = { java_cmd },
-    }
+  -- elseif (lsp == "jdtls")
+  -- then
+    -- local java_cmd = 'jdtls'
+    -- nvim_lsp[lsp].setup {
+      -- on_attach = on_attach,
+      -- capabilities = capabilities,
+      -- cmd = { java_cmd },
+    -- }
   else
     nvim_lsp[lsp].setup {
       on_attach = on_attach,
