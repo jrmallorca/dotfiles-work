@@ -8,8 +8,8 @@
 
 # Transfer config files.
 configuration:
-	cp -a config/. ~/.config/
-	cp -a ../windows/. $$USERPROFILE/.config/
+	cp -a ./ubuntu-20.04/. ~/.config/
+	sudo cp -a ./windows/. $$USERPROFILE/.config/
 
 # -----------------------------------------------------------------------------
 # Programs
