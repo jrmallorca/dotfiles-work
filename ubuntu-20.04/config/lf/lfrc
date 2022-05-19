@@ -574,12 +574,16 @@ map e search_edit
 # Navigate
 map zr z /
 map zh z ~/
+map zH z $USERPROFILE/
 map zn z ~/neorg
 map zp z ~/company-projects
 map zP z $USERPROFILE/company-projects
+map zsp z ~/self-projects
+map zsP z $USERPROFILE/self-projects
 map z. z $USERPROFILE/dotfiles-work/ubuntu-20.04
 map zc z ~/.config
 map zdw z ~/Downloads
+map zDw z $USERPROFILE/Downloads
 map zE z /etc
 map zU z /usr
 map zmc z /mnt/c
