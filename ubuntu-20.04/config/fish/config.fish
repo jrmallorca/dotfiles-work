@@ -147,7 +147,7 @@ abbr se 'sudoedit'
 abbr e 'nvim'
 
 # Dotfiles
-abbr mc 'z $USERPROFILE/dotfiles-work/ubuntu-20.04/ && make configuration && prevd'
+abbr mc 'z $USERPROFILE/dotfiles-work/ && make configuration && prevd'
 
 # nmcli
 abbr ns 'nmcli c show'

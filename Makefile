@@ -9,6 +9,7 @@
 # Transfer config files.
 configuration:
 	cp -a config/. ~/.config/
+	cp -a ../windows/. $$USERPROFILE/.config/
 
 # -----------------------------------------------------------------------------
 # Programs
