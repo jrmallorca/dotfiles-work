@@ -22,9 +22,14 @@ Run, komorebic.exe workspace-name 0 4 floaty, , Hide
 ; Set the padding of the different workspaces
 Run, komorebic.exe workspace-padding 0 1 30, , Hide
 Run, komorebic.exe container-padding 0 1 30, , Hide
-Run, komorebic.exe workspace-padding 0 2 200, , Hide
-Run, komorebic.exe workspace-padding 0 3 0, , Hide
-Run, komorebic.exe container-padding 0 3 0, , Hide
+Run, komorebic.exe workspace-padding 0 2 30, , Hide
+Run, komorebic.exe container-padding 0 2 30, , Hide
+Run, komorebic.exe workspace-padding 0 3 30, , Hide
+Run, komorebic.exe container-padding 0 3 30, , Hide
+Run, komorebic.exe workspace-padding 0 4 30, , Hide
+Run, komorebic.exe container-padding 0 4 30, , Hide
+Run, komorebic.exe workspace-padding 0 5 30, , Hide
+Run, komorebic.exe container-padding 0 5 30, , Hide
 
 ; Set the layouts of different workspaces
 Run, komorebic.exe workspace-layout 0 1 columns, , Hide
