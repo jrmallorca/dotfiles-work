@@ -1,70 +1,67 @@
 #SingleInstance Force
+#Include %A_ScriptDir%\komorebic.lib.ahk
+
+; Default to minimizing windows when switching workspaces
+WindowHidingBehaviour("minimize")
 
 ; Enable hot reloading of changes to this file
-Run, komorebic.exe watch-configuration enable, , Hide
+WatchConfiguration("enable")
+
+; Ensure there are 5 workspaces created on monitor 0
+EnsureWorkspaces(0, 5)
 
 ; Configure the invisible border dimensions
-Run, komorebic.exe invisible-borders 7 0 14 7, , Hide
+InvisibleBorders(7, 0, 14, 7)
 
-; Enable focus follows mouse
-Run, komorebic.exe focus-follows-mouse enable, , Hide
+; Configure the 1st workspace
+WorkspaceName(0, 0, "bsp")
 
-; Enable mouse follows focus
-Run, komorebic.exe mouse-follows-focus enable, , Hide
+; Configure the 2nd workspace
+WorkspaceName(0, 1, "columns") ; Optionally set the name of the workspace
+WorkspacePadding(0, 1, 30) ; Set the padding around the edge of the screen
+ContainerPadding(0, 1, 30) ; Set the padding between the containers on the screen
+WorkspaceRule("exe", "slack.exe", 0, 1) ; Always show chat apps on this workspace
 
-; Ensure there are 3 workspaces created on monitor 0
-; Run, komorebic.exe ensure-workspaces 0 5, , Hide
+; Configure the 3rd workspace
+WorkspaceName(0, 2, "thicc")
+WorkspacePadding(0, 2, 200) ; Set some super thicc padding
 
-; Give the workspaces some optional names
-Run, komorebic.exe workspace-name 0 0 bsp, , Hide
-Run, komorebic.exe workspace-name 0 1 columns, , Hide
-Run, komorebic.exe workspace-name 0 2 thicc, , Hide
-Run, komorebic.exe workspace-name 0 3 matrix, , Hide
-Run, komorebic.exe workspace-name 0 4 floaty, , Hide
+; Configure the 4th workspace
+WorkspaceName(0, 3, "matrix")
+WorkspacePadding(0, 3, 0) ; No padding at all
+ContainerPadding(0, 3, 0) ; Matrix-y hacker vibes
 
-; Set the padding of the different workspaces
-Run, komorebic.exe workspace-padding 0 1 30, , Hide
-Run, komorebic.exe container-padding 0 1 30, , Hide
-Run, komorebic.exe workspace-padding 0 2 30, , Hide
-Run, komorebic.exe container-padding 0 2 30, , Hide
-Run, komorebic.exe workspace-padding 0 3 30, , Hide
-Run, komorebic.exe container-padding 0 3 30, , Hide
-Run, komorebic.exe workspace-padding 0 4 30, , Hide
-Run, komorebic.exe container-padding 0 4 30, , Hide
-Run, komorebic.exe workspace-padding 0 5 30, , Hide
-Run, komorebic.exe container-padding 0 5 30, , Hide
+; Configure the 5th workspace
+WorkspaceName(0, 4, "floaty")
+WorkspaceTiling(0, 4, "disable") ; Everything floats here
 
-; Set the layouts of different workspaces
-; Run, komorebic.exe workspace-layout 0 1 columns, , Hide
+; Applications
 
-; Set the floaty layout to not tile any windows
-Run, komorebic.exe workspace-tiling 0 4 disable, , Hide
+; Configure floating rules
+FloatRule("class", "SunAwtDialog") ; All the IntelliJ popups
+FloatRule("title", "Control Panel")
+FloatRule("class", "TaskManagerWindow")
+FloatRule("exe", "Wally.exe")
+FloatRule("exe", "wincompose.exe")
+FloatRule("exe", "1Password.exe")
+FloatRule("exe", "Wox.exe")
+FloatRule("exe", "ddm.exe")
+FloatRule("class", "Chrome_RenderWidgetHostHWND") ; GOG Electron invisible overlay
+FloatRule("class", "CEFCLIENT")
 
-; Always show chat apps on the second workspace
-Run, komorebic.exe workspace-rule exe slack.exe 0 1, , Hide
-Run, komorebic.exe workspace-rule exe Discord.exe 0 1, , Hide
+; Identify Minimize-to-Tray Applications
+IdentifyTrayApplication("exe", "Discord.exe")
+IdentifyTrayApplication("exe", "Spotify.exe")
+IdentifyTrayApplication("exe", "GalaxyClient.exe")
 
-; Always float IntelliJ popups, matching on class
-Run, komorebic.exe float-rule class SunAwtDialog, , Hide
-; Always float Control Panel, matching on title
-Run, komorebic.exe float-rule title "Control Panel", , Hide
-; Always float Task Manager, matching on class
-Run, komorebic.exe float-rule class TaskManagerWindow, , Hide
-; Always float Wally, matching on executable name
-Run, komorebic.exe float-rule exe Wally.exe, , Hide
-Run, komorebic.exe float-rule exe wincompose.exe, , Hide
-; Always float Calculator app, matching on window title
-Run, komorebic.exe float-rule title Calculator, , Hide
-Run, komorebic.exe float-rule exe 1Password.exe, , Hide
+; Identify Electron applications with overflowing borders
+IdentifyBorderOverflow("exe", "Discord.exe")
+IdentifyBorderOverflow("exe", "Spotify.exe")
+IdentifyBorderOverflow("exe", "GalaxyClient.exe")
+IdentifyBorderOverflow("class", "ZPFTEWndClass")
 
-; Always manage forcibly these applications that don't automatically get picked up by komorebi
-Run, komorebic.exe manage-rule exe TIM.exe, , Hide
-
-; Identify applications that close to the tray
-Run, komorebic.exe identify-tray-application exe Discord.exe, , Hide
-
-; Identify applications that have overflowing borders
-Run, komorebic.exe identify-border-overflow exe Discord.exe, , Hide
+; Identify applications to be forcibly managed
+ManageRule("exe", "GalaxyClient.exe")
 
 ; CONTROLS
 ; ^ = Ctrl
@@ -74,173 +71,228 @@ Run, komorebic.exe identify-border-overflow exe Discord.exe, , Hide
 
 ; Change the focused window, Mod + Vim direction keys
 !h::
-Run, komorebic.exe focus left, , Hide
+Focus("left")
 return
 
 !j::
-Run, komorebic.exe focus down, , Hide
+Focus("down")
 return
 
 !k::
-Run, komorebic.exe focus up, , Hide
+Focus("up")
 return
 
 !l::
-Run, komorebic.exe focus right, , Hide
+Focus("right")
 return
 
 ; Move the focused window in a given direction, Mod + Shift + Vim direction keys
 !+h::
-Run, komorebic.exe move left, , Hide
+Move("left")
 return
 
 !+j::
-Run, komorebic.exe move down, , Hide
+Move("down")
 return
 
 !+k::
-Run, komorebic.exe move up, , Hide
+Move("up")
 return
 
 !+l::
-Run, komorebic.exe move right, , Hide
+Move("right")
 return
 
 ; Stack the focused window in a given direction, Mod + Shift + direction keys
 !+Left::
-Run, komorebic.exe stack left, , Hide
+Stack("left")
 return
 
 !+Down::
-Run, komorebic.exe stack down, , Hide
+Stack("down")
 return
 
 !+Up::
-Run, komorebic.exe stack up, , Hide
+Stack("up")
 return
 
 !+Right::
-Run, komorebic.exe stack right, , Hide
+Stack("right")
 return
 
 !]::
-Run, komorebic.exe cycle-stack next, , Hide
+CycleStack("next")
 return
 
 ![::
-Run, komorebic.exe cycle-stack previous, , Hide
+CycleStack("previous")
 return
 
 ; Unstack the focused window, Mod + Shift + D
 !+d::
-Run, komorebic.exe unstack, , Hide
+Unstack()
 return
 
 ; Promote the focused window to the top of the tree, Mod + Shift + Enter
 !+Enter::
-Run, komorebic.exe promote, , Hide
+Promote()
+return
+
+; Manage the focused window
+!=::
+Manage()
+return
+
+; Unmanage the focused window
+!-::
+Unmanage()
 return
 
 ; Switch to an equal-width, max-height column layout on the main workspace, Mod + Shift + C
 !+c::
-Run, komorebic.exe workspace-layout 0 0 columns, , Hide
+ChangeLayout("columns")
 return
 
 ; Switch to the default bsp tiling layout on the main workspace, Mod + Shift + T
 !+t::
-Run, komorebic.exe workspace-layout 0 0 bsp, , Hide
+ChangeLayout("bsp")
 return
 
 ; Toggle the Monocle layout for the focused window, Mod + Shift + F
 !+f::
-Run, komorebic.exe toggle-monocle, , Hide
+ToggleMonocle()
 return
 
-; Toggle native maximize for the focused window, Mod + Shift + =
-!+=::
-Run, komorebic.exe toggle-maximize, , Hide
+; Toggle native maximize for the focused window, Mod + F
+!f::
+ToggleMaximize()
 return
 
 ; Flip horizontally, Mod + X
 !x::
-Run, komorebic.exe flip-layout horizontal, , Hide
+FlipLayout("horizontal")
 return
 
 ; Flip vertically, Mod + Y
 !y::
-Run, komorebic.exe flip-layout vertical, , Hide
+FlipLayout("vertical")
 return
 
-; Force a retile if things get janky, Mod + R
-!r::
-Run, komorebic.exe retile, , Hide
+; Force a retile if things get janky, Mod + Shift + R
+!+r::
+Retile()
 return
 
 ; Float the focused window, Mod + T
 !t::
-Run, komorebic.exe toggle-float, , Hide
+ToggleFloat()
 return
 
-; Reload ~/komorebi.ahk, Mod + Shift + R
-!+r::
-Run, komorebic.exe reload-configuration, , Hide
+; Reload ~/komorebi.ahk, Mod + O
+!o::
+ReloadConfiguration()
 return
 
 ; Pause responding to any window events or komorebic commands, Mod + P
 !p::
-Run, komorebic.exe toggle-pause, , Hide
+TogglePause()
+return
+
+; Enable focus follows mouse
+!0::
+ToggleFocusFollowsMouse("komorebi")
 return
 
 ; Switch to workspace
 !1::
 Send !
-Run, komorebic.exe focus-workspace 0, , Hide
+FocusWorkspace(0)
 return
 
 !2::
 Send !
-Run, komorebic.exe focus-workspace 1, , Hide
+FocusWorkspace(1)
 return
 
 !3::
 Send !
-Run, komorebic.exe focus-workspace 2, , Hide
+FocusWorkspace(2)
 return
 
 !4::
 Send !
-Run, komorebic.exe focus-workspace 3, , Hide
+FocusWorkspace(3)
 return
 
 !5::
 Send !
-Run, komorebic.exe focus-workspace 4, , Hide
+FocusWorkspace(4)
+return
+
+!6::
+Send !
+FocusWorkspace(5)
+return
+
+!7::
+Send !
+FocusWorkspace(6)
+return
+
+!8::
+Send !
+FocusWorkspace(7)
+return
+
+!9::
+Send !
+FocusWorkspace(8)
 return
 
 ; Move window to workspace
 !+1::
-Run, komorebic.exe move-to-workspace 0, , Hide
+MoveToWorkspace(0)
 return
 
 !+2::
-Run, komorebic.exe move-to-workspace 1, , Hide
+MoveToWorkspace(1)
 return
 
 !+3::
-Run, komorebic.exe move-to-workspace 2, , Hide
+MoveToWorkspace(2)
 return
 
 !+4::
-Run, komorebic.exe move-to-workspace 3, , Hide
+MoveToWorkspace(3)
 return
 
 !+5::
-Run, komorebic.exe move-to-workspace 4, , Hide
+MoveToWorkspace(4)
 return
 
-; Programs
+!+6::
+Send !
+MoveToWorkspace(5)
+return
 
-; Quit currently focused program
+!+7::
+Send !
+MoveToWorkspace(6)
+return
+
+!+8::
+Send !
+MoveToWorkspace(7)
+return
+
+!+9::
+Send !
+MoveToWorkspace(8)
+return
+
+; Applications
+
+; Quit currently focused application
 !q::
 WinClose, A
 return
@@ -249,3 +301,4 @@ return
 !Enter::
 Run, %USERPROFILE%\AppData\Local\Microsoft\WindowsApps\wt.exe
 return
+
