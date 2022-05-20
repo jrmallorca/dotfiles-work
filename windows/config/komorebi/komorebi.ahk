@@ -7,8 +7,8 @@ WindowHidingBehaviour("minimize")
 ; Enable hot reloading of changes to this file
 WatchConfiguration("enable")
 
-; Ensure there are 5 workspaces created on monitor 0
-EnsureWorkspaces(0, 5)
+; Ensure there are 9 workspaces created on monitor 0
+EnsureWorkspaces(0, 9)
 
 ; Configure the invisible border dimensions
 InvisibleBorders(7, 0, 14, 7)
@@ -34,8 +34,6 @@ ContainerPadding(0, 3, 0) ; Matrix-y hacker vibes
 ; Configure the 5th workspace
 WorkspaceName(0, 4, "floaty")
 WorkspaceTiling(0, 4, "disable") ; Everything floats here
-
-; Applications
 
 ; Configure floating rules
 FloatRule("class", "SunAwtDialog") ; All the IntelliJ popups
@@ -178,9 +176,14 @@ return
 FlipLayout("vertical")
 return
 
-; Force a retile if things get janky, Mod + Shift + R
-!+r::
+; Force a retile if things get janky, Mod + R
+!r::
 Retile()
+return
+
+; Reload ~/komorebi.ahk, Mod + Shift + R
+!+r::
+ReloadConfiguration()
 return
 
 ; Float the focused window, Mod + T
@@ -188,19 +191,9 @@ return
 ToggleFloat()
 return
 
-; Reload ~/komorebi.ahk, Mod + O
-!o::
-ReloadConfiguration()
-return
-
 ; Pause responding to any window events or komorebic commands, Mod + P
 !p::
 TogglePause()
-return
-
-; Enable focus follows mouse
-!0::
-ToggleFocusFollowsMouse("komorebi")
 return
 
 ; Switch to workspace
