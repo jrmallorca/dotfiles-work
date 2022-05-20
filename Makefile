@@ -10,6 +10,7 @@
 configuration:
 	cp -a ./ubuntu-20.04/config/. ~/.config/
 	cp -a ./windows/config/. $$USERPROFILE/.config/
+	cp -a ./windows/scripts $$USERPROFILE/.config/
 
 # -----------------------------------------------------------------------------
 # Programs
