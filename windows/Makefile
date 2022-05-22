@@ -10,3 +10,4 @@
 configuration:
 	cp -a ./config/. $$USERPROFILE/.config/
 	cp -a ./scripts $$USERPROFILE/.config/
+	cp -a ./yasb/. $$USERPROFILE/.yasb/
