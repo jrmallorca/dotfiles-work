@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------------
-# General Setup
+# Windows Setup
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
@@ -8,5 +8,5 @@
 
 # Transfer config files.
 configuration:
-	cd ./ubuntu-20.04 && make configuration
-	cd ./windows && make configuration
+	cp -a ./config/. $$USERPROFILE/.config/
+	cp -a ./scripts $$USERPROFILE/.config/
