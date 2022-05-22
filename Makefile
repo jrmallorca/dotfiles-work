@@ -8,5 +8,5 @@
 
 # Transfer config files.
 configuration:
-	cd ./ubuntu-20.04 && make configuration
+	cd ./linux/ubuntu-20.04 && make configuration
 	cd ./windows && make configuration
