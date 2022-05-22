@@ -212,8 +212,3 @@ fish_add_path /home/joni/.deno/bin
 
 # Cargo
 fish_add_path RUST_SRC_PATH $HOME/.cargo/bin
-
-# Flutter
-# fish_add_path /usr/lib/dart/bin
-# set -gx JAVA_OPTS '-XX:+IgnoreUnrecognizedVMOptions'
-# set -gx ANDROID_SDK_ROOT /opt/android-sdk
