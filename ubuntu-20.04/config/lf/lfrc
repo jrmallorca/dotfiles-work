@@ -78,6 +78,12 @@ cmd z &{{
     lf -remote "send $id cd \"$argv[1]\"" # Change to selected directory
 }}
 
+# Change directory in Windows Home Directory and add to zoxide
+cmd win_z &{{
+    zoxide add "$argv[1]"                          # Add to zoxide database
+    lf -remote "send $id cd $USERPROFILE/$argv[1]" # Change to selected directory
+}}
+
 # Go to the root of the git repository
 cmd git_root %{{
     set -l root_dir (git rev-parse --show-toplevel) # Get root directory
@@ -519,7 +525,7 @@ map f   # Disable find
 
 # Commands
 
-map mc &{{ cd $USERPROFILE/dotfiles-work/ubuntu-20.04/ && make configuration }}
+map mc &{{ cd $USERPROFILE/dotfiles-work/ && make configuration }}
 map p paste
 map y copy
 map x cut
@@ -574,12 +580,16 @@ map e search_edit
 # Navigate
 map zr z /
 map zh z ~/
+map zH win_z
 map zn z ~/neorg
 map zp z ~/company-projects
-map zP z $USERPROFILE/company-projects
-map z. z $USERPROFILE/dotfiles-work/ubuntu-20.04
+map zP win_z company-projects
+map zsp z ~/self-projects
+map zsP win_z /self-projects
+map z. win_z dotfiles-work
 map zc z ~/.config
 map zdw z ~/Downloads
+map zDw win_z Downloads
 map zE z /etc
 map zU z /usr
 map zmc z /mnt/c
