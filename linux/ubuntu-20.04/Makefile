@@ -8,7 +8,7 @@
 
 # Transfer config files.
 configuration:
-	cp -a ./config/. ~/.config/
+	cp -a ./../config/. ~/.config/
 
 # -----------------------------------------------------------------------------
 # Programs
