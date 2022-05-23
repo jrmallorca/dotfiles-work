@@ -96,7 +96,7 @@ bars:
     widgets:
       left:   ["komorebi_workspaces", "komorebi_active_layout", "active_window"]
       center: ["clock"]
-      right:  ["explorer_button", "ip_info", "cpu", "memory", "battery"]
+      right:  ["cpu", "memory", "battery"]
 
 # widgets:
   # my-clock-widget:
@@ -378,9 +378,9 @@ widgets:
   clock:
     type: "yasb.clock.ClockWidget"
     options:
-        label: "{%H:%M:%S %Z}"
-        label_alt: "{%d-%m-%y %H:%M:%S %Z}"
-        timezones: ["Europe/London", "America/New_York"]
+        label: "{%d-%m-%y %H:%M:%S %Z}"
+        label_alt: "{%H:%M:%S %Z}"
+        timezones: ["Europe/London"]
         callbacks:
           on_middle: "exec explorer.exe shell:Appsfolder\\Microsoft.WindowsAlarms_8wekyb3d8bbwe!App"
           on_right: "next_timezone"
@@ -419,12 +419,12 @@ widgets:
         label_workspace_btn: "{index}"
         label_default_name: "{index}"
         label_zero_index: false
-        hide_empty_workspaces: false
+        hide_empty_workspaces: true
 
   komorebi_active_layout:
     type: "komorebi.active_layout.ActiveLayoutWidget"
     options:
-      hide_if_offline: false
+      hide_if_offline: true
       label: "{icon}"
       layout_icons:
         bsp: "[\\\\]"
