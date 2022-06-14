@@ -21,9 +21,10 @@ configuration:
 necessary: SHELL:=/bin/bash
 necessary:
 	curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
-	brew upgrade
 	brew install wget fzf fd bat ripgrep \
 		neovim fish zoxide diff-so-fancy lf gh
+	brew tap homebrew/cask-fonts
+	brew install --cask font-iosevka-ss14
 	echo /opt/homebrew/bin/fish | sudo tee -a /etc/shells
 	chsh -s /opt/homebrew/bin/fish
 	git config --global core.pager "diff-so-fancy | less --tabs=4 -RFX"
