@@ -9,6 +9,7 @@
 # Transfer config files.
 configuration:
 	cp -a ./../config/. ~/.config/
+	cp -a ./config/. ~/.config/
 
 # -----------------------------------------------------------------------------
 # Programs
@@ -17,12 +18,14 @@ configuration:
 # Base
 # -----------------------------------------------------------------------------
 # Install main programs.
+necessary: SHELL:=/bin/bash
 necessary:
-	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
 	brew upgrade
 	brew install wget fzf fd bat ripgrep \
 		neovim fish zoxide diff-so-fancy lf gh
-	chsh -s /usr/bin/fish
+	echo /opt/homebrew/bin/fish | sudo tee -a /etc/shells
+	chsh -s /opt/homebrew/bin/fish
 	git config --global core.pager "diff-so-fancy | less --tabs=4 -RFX"
 	git config --global interactive.diffFilter "diff-so-fancy --patch"
 
