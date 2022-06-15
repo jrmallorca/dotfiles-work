@@ -29,8 +29,10 @@ shift + alt - l : yabai -m window --swap east
 #                   yabai -m space --focus "${index}"
 
 # Focus on spaces within current display
-ctrl + alt - h : if [ (yabai -m query --spaces --space | jq '.index' ) != (yabai -m query --displays --display | jq '.spaces[-1]') ]; yabai -m space --focus next; else; yabai -m space --focus $(yabai -m query --displays --display | jq '.spaces[0]'); end
-ctrl + alt - l : if [ (yabai -m query --spaces --space | jq '.index' ) != (yabai -m query --displays --display | jq '.spaces[0]') ]; yabai -m space --focus prev; else; yabai -m space --focus $(yabai -m query --displays --display | jq '.spaces[-1]'); end
+# If index of current space is not equal to previous/last space of current display, go to next space, else go to first space
+# and vice versa
+ctrl + alt - h : if [ (yabai -m query --spaces --space | jq '.index' ) != (yabai -m query --displays --display | jq '.spaces[-1]') ]; yabai -m space --focus next; else; yabai -m space --focus (yabai -m query --displays --display | jq '.spaces[0]'); end
+ctrl + alt - l : if [ (yabai -m query --spaces --space | jq '.index' ) != (yabai -m query --displays --display | jq '.spaces[0]') ]; yabai -m space --focus prev; else; yabai -m space --focus (yabai -m query --displays --display | jq '.spaces[-1]'); end
 
 # send window to desktop and follow focus
 # shift + alt - x : yabai -m window --space recent; yabai -m space --focus recent
@@ -38,8 +40,8 @@ ctrl + alt - l : if [ (yabai -m query --spaces --space | jq '.index' ) != (yabai
 # shift + alt - c : yabai -m window --space next; yabai -m space --focus next
 
 # Focus on spaces within current display
-ctrl + alt - j : yabai -m display --focus prev
-ctrl + alt - k : yabai -m display --focus next
+ctrl + alt - j : yabai -m display --focus prev || yabai -m display --focus last
+ctrl + alt - k : yabai -m display --focus next || yabai -m display --focus first
 
 # send window to monitor and follow focus
 # ctrl + cmd - x  : yabai -m window --display next; yabai -m display --focus recent
