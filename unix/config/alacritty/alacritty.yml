@@ -67,7 +67,7 @@ window:
   # Values for `decorations` (macOS only):
   #     - transparent: Title bar, transparent background and title bar buttons
   #     - buttonless: Title bar, transparent background and no title bar buttons
-  #decorations: full
+  decorations: buttonless
 
   # Startup Mode (changes require restart)
   #
@@ -195,7 +195,7 @@ font:
     family: Iosevka SS14
     style: Bold Italic
 
-  size: 10.0
+  size: 14.0
 
   offset:
     x: 0
