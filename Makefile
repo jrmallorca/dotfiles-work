@@ -10,9 +10,9 @@
 ubuntu:
 	cd ./unix/ubuntu-20.04 && make configuration
 
-windows:
-	cd ./unix/ubuntu-20.04 && make configuration
-	cd ./windows && make configuration
-
 mac:
 	cd ./unix/mac && make configuration
+
+wsl-ubuntu:
+	cd ./windows && make configuration
+	cd ./unix/ubuntu-20.04 && make configuration

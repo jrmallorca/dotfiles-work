@@ -21,7 +21,7 @@ function mc -d 'Make configuration based on current OS'
         case MacOS
             abbr mc 'z ~/dotfiles-work && make mac && prevd'
         case WSL
-            abbr mc 'z $USERPROFILE/dotfiles-work/ && make windows && prevd'
+            abbr mc 'z $USERPROFILE/dotfiles-work/ && make wsl-ubuntu && prevd'
         case '*'
             echo "Could not detect appropriate configuration for current OS"
     end
