@@ -97,15 +97,6 @@ if not set -q MY_ABBR_SET
     abbr se 'sudoedit'
     abbr e 'nvim'
 
-    # Dotfiles
-    if [ "$OSTYPE" = "Linux" ]
-        abbr mc 'z ~/dotfiles-work && make ubuntu && prevd'
-    else if [ "$OSTYPE" = "MacOS" ]
-        abbr mc 'z ~/dotfiles-work && make mac && prevd'
-    else if [ "$OSTYPE" = "WSL" ]
-        abbr mc 'z $USERPROFILE/dotfiles-work/ && make windows && prevd'
-    end
-
     # nmcli
     abbr ns 'nmcli c show'
     abbr nd 'nmcli c down'
