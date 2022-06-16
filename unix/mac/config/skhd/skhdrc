@@ -29,10 +29,29 @@ shift + alt - l : yabai -m window --swap east
 #                   yabai -m space --focus "${index}"
 
 # Focus on spaces within current display
-# If index of current space is not equal to previous/last space of current display, go to next space, else go to first space
+# ```
+# If:
+# - Index of current space is not equal to previous/last space of current display
+# - Go to next space
+# - Else, go to first space
+# ```
 # and vice versa
-ctrl + alt - h : if [ (yabai -m query --spaces --space | jq '.index' ) != (yabai -m query --displays --display | jq '.spaces[-1]') ]; yabai -m space --focus next; else; yabai -m space --focus (yabai -m query --displays --display | jq '.spaces[0]'); end
-ctrl + alt - l : if [ (yabai -m query --spaces --space | jq '.index' ) != (yabai -m query --displays --display | jq '.spaces[0]') ]; yabai -m space --focus prev; else; yabai -m space --focus (yabai -m query --displays --display | jq '.spaces[-1]'); end
+ctrl + alt - h : if [ \
+                     (yabai -m query --spaces --space | jq '.index' ) != \
+                     (yabai -m query --displays --display | jq '.spaces[-1]') \
+                     ]; \
+                     yabai -m space --focus next; \
+                 else; \
+                     yabai -m space --focus (yabai -m query --displays --display | jq '.spaces[0]'); \
+                 end
+ctrl + alt - l : if [ \
+                     (yabai -m query --spaces --space | jq '.index' ) != \
+                     (yabai -m query --displays --display | jq '.spaces[0]') \
+                     ]; \
+                     yabai -m space --focus prev; \
+                 else; \
+                     yabai -m space --focus (yabai -m query --displays --display | jq '.spaces[-1]'); \
+                 end
 
 # send window to desktop and follow focus
 # shift + alt - x : yabai -m window --space recent; yabai -m space --focus recent
