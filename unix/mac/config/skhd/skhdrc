@@ -39,19 +39,19 @@ ctrl + alt - n : yabai -m space --create && \
 # and vice versa
 ctrl + alt - h : if [ \
                      (yabai -m query --spaces --space | jq '.index' ) != \
-                     (yabai -m query --displays --display | jq '.spaces[-1]') \
-                     ]; \
-                     yabai -m space --focus next; \
-                 else; \
-                     yabai -m space --focus (yabai -m query --displays --display | jq '.spaces[0]'); \
-                 end
-ctrl + alt - l : if [ \
-                     (yabai -m query --spaces --space | jq '.index' ) != \
                      (yabai -m query --displays --display | jq '.spaces[0]') \
                      ]; \
                      yabai -m space --focus prev; \
                  else; \
                      yabai -m space --focus (yabai -m query --displays --display | jq '.spaces[-1]'); \
+                 end
+ctrl + alt - l : if [ \
+                     (yabai -m query --spaces --space | jq '.index' ) != \
+                     (yabai -m query --displays --display | jq '.spaces[-1]') \
+                     ]; \
+                     yabai -m space --focus next; \
+                 else; \
+                     yabai -m space --focus (yabai -m query --displays --display | jq '.spaces[0]'); \
                  end
 
 # Move window to spaces within current display
@@ -64,16 +64,6 @@ ctrl + alt - l : if [ \
 # and vice versa
 ctrl + shift + alt - h : if [ \
                              (yabai -m query --spaces --space | jq '.index' ) != \
-                             (yabai -m query --displays --display | jq '.spaces[-1]') \
-                             ]; \
-                             yabai -m window --space next; \
-                             yabai -m space --focus next; \
-                         else; \
-                             yabai -m window --space (yabai -m query --displays --display | jq '.spaces[0]'); \
-                             yabai -m space --focus (yabai -m query --displays --display | jq '.spaces[0]'); \
-                         end
-ctrl + shift + alt - l : if [ \
-                             (yabai -m query --spaces --space | jq '.index' ) != \
                              (yabai -m query --displays --display | jq '.spaces[0]') \
                              ]; \
                              yabai -m window --space prev; \
@@ -82,22 +72,30 @@ ctrl + shift + alt - l : if [ \
                              yabai -m window --space (yabai -m query --displays --display | jq '.spaces[-1]'); \
                              yabai -m space --focus (yabai -m query --displays --display | jq '.spaces[-1]'); \
                          end
+ctrl + shift + alt - l : if [ \
+                             (yabai -m query --spaces --space | jq '.index' ) != \
+                             (yabai -m query --displays --display | jq '.spaces[-1]') \
+                             ]; \
+                             yabai -m window --space next; \
+                             yabai -m space --focus next; \
+                         else; \
+                             yabai -m window --space (yabai -m query --displays --display | jq '.spaces[0]'); \
+                             yabai -m space --focus (yabai -m query --displays --display | jq '.spaces[0]'); \
+                         end
 
-# send window to desktop and follow focus
-# shift + alt - x : yabai -m window --space recent; yabai -m space --focus recent
-# shift + alt - z : yabai -m window --space prev; yabai -m space --focus prev
-# shift + alt - c : yabai -m window --space next; yabai -m space --focus next
+# Move window to displays and follow focus
+ctrl + shift + alt - j : yabai -m window --display prev || \
+                         yabai -m window --display last && \
+                         yabai -m display --focus prev || \
+                         yabai -m display --focus last
+ctrl + shift + alt - k : yabai -m window --display next || \
+                         yabai -m window --display first && \
+                         yabai -m display --focus next || \
+                         yabai -m display --focus first
 
-# Focus on spaces within current display
+# Focus on displays
 ctrl + alt - j : yabai -m display --focus prev || yabai -m display --focus last
 ctrl + alt - k : yabai -m display --focus next || yabai -m display --focus first
-
-# send window to monitor and follow focus
-# ctrl + cmd - x  : yabai -m window --display next; yabai -m display --focus recent
-# ctrl + cmd - z  : yabai -m window --display next; yabai -m display --focus next
-# ctrl + cmd - c  : yabai -m window --display next; yabai -m display --focus next
-# ctrl + cmd - 1  : yabai -m window --display 1; yabai -m display --focus 1
-# ctrl + cmd - 2  : yabai -m window --display 2; yabai -m display --focus 2
 
 # move floating window
 # shift + ctrl - a : yabai -m window --move rel:-20:0
