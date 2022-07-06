@@ -7,6 +7,12 @@ WindowHidingBehaviour("minimize")
 ; Enable hot reloading of changes to this file
 WatchConfiguration("enable")
 
+; Disable mouse follows focus
+MouseFollowsFocus(false)
+
+; Disable mouse follows focus
+FocusFollowsMouse(false, "windows")
+
 ; Ensure there are 9 workspaces created on monitor 0
 EnsureWorkspaces(0, 9)
 
@@ -118,12 +124,14 @@ return
 Stack("right")
 return
 
-!]::
-CycleStack("next")
+; Cycle through monitors
+
+!^k::
+CycleMonitor("next")
 return
 
-![::
-CycleStack("previous")
+!^j::
+CycleMonitor("previous")
 return
 
 ; Unstack the focused window, Mod + Shift + D
