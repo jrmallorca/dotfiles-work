@@ -1,10 +1,3 @@
-# Paths
-# Homebrew
-fish_add_path /opt/homebrew/bin
-
-# deno (Javascript LSP)
-fish_add_path $HOME/.deno/bin
-
 # Variables
 # OS Type
 switch (uname)
@@ -43,3 +36,13 @@ set -gx _ZO_DATA_DIR $HOME/.local/share
 if [ "$OSTYPE" = "WSL" ]
     fish_add_path RUST_SRC_PATH $HOME/.cargo/bin
 end
+
+# nvm.fish
+set -x nvm_default_version lts
+
+# Paths
+# Homebrew
+if [ "$OSTYPE" = "MacOS" ]
+    fish_add_path /opt/homebrew/bin
+end
+
