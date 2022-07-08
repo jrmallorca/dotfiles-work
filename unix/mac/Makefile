@@ -21,6 +21,7 @@ configuration:
 necessary: SHELL:=/bin/bash
 necessary:
 	curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
+	brew upgrade
 	brew install wget fzf fd bat ripgrep jq \
 		neovim fish zoxide diff-so-fancy lf gh
 	brew tap homebrew/cask-fonts
@@ -30,10 +31,15 @@ necessary:
 	git config --global core.pager "diff-so-fancy | less --tabs=4 -RFX"
 	git config --global interactive.diffFilter "diff-so-fancy --patch"
 
-fisher: SHELL:=/usr/bin/fish
+nvim:
+	# Compile norg for treesitter using GNU make
+	brew install gcc
+	CC=gcc-11 nvim -c "TSInstall norg"
+
+fisher: SHELL:=/opt/homebrew/bin/fish
 fisher:
 	curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher
 
-fisherplugins: SHELL:=/usr/bin/fish
+fisherplugins: SHELL:=/opt/homebrew/bin/fish
 fisherplugins:
 	fisher install jorgebucaran/nvm.fish
