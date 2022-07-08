@@ -36,7 +36,8 @@ require('packer').startup(function()
   }
   use 'neovim/nvim-lspconfig' -- Configurations for built-in LSP client
   use "williamboman/nvim-lsp-installer" -- Server installer for LSP
-  use 'hrsh7th/nvim-compe' -- Autocompletion plugin
+  use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
+  use 'hrsh7th/cmp-nvim-lsp' -- Make Neovim use cmp for LSP
   use 'L3MON4D3/LuaSnip' -- Snippets plugin
   use 'windwp/nvim-autopairs' -- Autopairs plugin
   use 'ggandor/lightspeed.nvim' -- 2 character search
