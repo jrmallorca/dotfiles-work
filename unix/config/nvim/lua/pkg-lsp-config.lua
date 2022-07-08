@@ -62,3 +62,6 @@ for _, server in ipairs(lsp_installer.get_installed_servers()) do
     capabilities = capabilities
   }
 end
+
+-- Get rid of "Undefined global `vim`" error.
+lspconfig.sumneko_lua.setup{ settings = { Lua = { diagnostics = { globals = { 'vim' } } } } }
