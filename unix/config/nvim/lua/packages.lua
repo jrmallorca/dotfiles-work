@@ -18,39 +18,40 @@ vim.api.nvim_exec(
 -- Packages
 local use = require('packer').use
 require('packer').startup(function()
-  use 'wbthomason/packer.nvim'     -- Package manager
-  use 'Pocco81/TrueZen.nvim'       -- Better UI
-  use {                            -- Display git signs
+  use 'wbthomason/packer.nvim' -- Package manager
+  use 'Pocco81/TrueZen.nvim' -- Better UI
+  use { -- Display git signs
     'lewis6991/gitsigns.nvim',
     requires = {
       'nvim-lua/plenary.nvim'
     }
   }
-  use {                            -- Fuzzy finder
+  use { -- Fuzzy finder
     'nvim-telescope/telescope.nvim',
     requires = { {'nvim-lua/plenary.nvim'} }
   }
-  -- Highlight, edit, and navigate code using a fast incremental parsing library
-  use {
+  use { -- Highlight, edit, and navigate code using a fast incremental parsing library
       'nvim-treesitter/nvim-treesitter',
       run = ':TSUpdate'
   }
-  use 'neovim/nvim-lspconfig'      -- Configurations for built-in LSP client
-  use 'hrsh7th/nvim-compe'         -- Autocompletion plugin
-  use 'L3MON4D3/LuaSnip'           -- Snippets plugin
-  use 'windwp/nvim-autopairs'      -- Autopairs plugin
-  use 'ggandor/lightspeed.nvim'    -- 2 character search
+  use 'neovim/nvim-lspconfig' -- Configurations for built-in LSP client
+  use "williamboman/nvim-lsp-installer" -- Server installer for LSP
+  use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
+  use 'hrsh7th/cmp-nvim-lsp' -- Make Neovim use cmp for LSP
+  use 'L3MON4D3/LuaSnip' -- Snippets plugin
+  use 'windwp/nvim-autopairs' -- Autopairs plugin
+  use 'ggandor/lightspeed.nvim' -- 2 character search
   use 'winston0410/commented.nvim' -- Comment blocks of code
-  -- Neovim org mode (Notes and organisation)
-  use {
+  use { -- Neovim org mode (Notes and organisation)
     "vhyrro/neorg",
     requires = "nvim-lua/plenary.nvim",
   }
-  use {                            -- Testing
-    "rcarriga/vim-ultest",
+  use { -- Testing
+    "nvim-neotest/neotest",
     requires = {
-      "vim-test/vim-test"
-    },
-    run = ":UpdateRemotePlugins"
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "antoinemadec/FixCursorHold.nvim"
+    }
   }
 end)
